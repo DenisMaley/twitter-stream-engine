@@ -32,6 +32,10 @@ services:
     links:
         - "rabbit:twitter-stream-rabbitmq"
     environment:
+        CONSUMER_KEY: 'VAXeIbbL824ekd9Gx5e3Gw2e8'
+        CONSUMER_SECRET: 'Ft2xJ9nrmjkthvsDVxr5Uq0LiJVkABbrPZj3FqhS5OVexIt3Ah'
+        ACCESS_TOKEN: '1356346947708346368-EVeMjQsC7nnDfNVrfOp5hcUQ94Em8C'
+        ACCESS_TOKEN_SECRET: 'y94fjQoyXytokao9e8bZsfo0kQJJV1hVENu134pDnPEPS'
         RABBIT_PASSWORD: "guest"
         RABBIT_USER: "guest"
         RABBIT_HOST: "rabbit"

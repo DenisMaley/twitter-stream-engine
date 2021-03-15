@@ -20,3 +20,6 @@ test:
 	coverage run --append -m pytest statistics/test $(ARGS)
 
 coverage: test coverage-report coverage-html
+
+log:
+	docker exec twitter-stream-logger cat log.json
