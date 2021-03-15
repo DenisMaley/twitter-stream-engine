@@ -1,22 +1,18 @@
-from typing import Any
 from nameko.rpc import rpc
 from nameko.events import event_handler
-from nameko_redis import Redis
+
+from statistics import dependencies
 
 
 class StatisticsService:
 
     name = 'statistics'
-    redis = Redis('development')
+    storage = dependencies.Storage()
 
     @event_handler("listener", "log_records")
     def update_statistics(self, records: list):
-        self.set_param('amount', len(records))
-
-    def set_param(self, key: str, value: Any):
-        self.redis.set(key, value)
-        return value
+        self.storage.set('amount', len(records))
 
     @rpc
-    def get_param(self, key: str):
-        return self.redis.get(key)
+    def get_statistics(self):
+        return self.storage.get('amount')

@@ -10,8 +10,16 @@ services:
   redis:
     container_name: twitter-stream-redis
     image: redis
-    command: ["redis-server", "--appendonly", "yes"]
-    hostname: redis
+    ports:
+      - "6380:6379"
+    command: [
+      "bash", "-c",
+      '
+         docker-entrypoint.sh
+         --requirepass password
+        '
+    ]
+    restart: always
 
   listener:
     container_name: twitter-stream-listener
@@ -62,6 +70,8 @@ services:
     environment:
         REDIS_HOST: "redis"
         REDIS_PORT: "6379"
+        REDIS_INDEX: "11"
+        REDIS_PASSWORD: "password"
         RABBIT_PASSWORD: "guest"
         RABBIT_USER: "guest"
         RABBIT_HOST: "rabbit"

@@ -1,22 +1,46 @@
-from typing import Any
 import pytest
-from redis import StrictRedis
+import redis
 
-
-def test_key_plugin():
-    return 'nameko-test-value'
-
-
-def pytest_configure():
-    pytest.test_key = test_key_plugin()
+from nameko import config
+from statistics.dependencies import REDIS_URI_KEY
 
 
 @pytest.fixture
-def redis_db(request: Any):
-    url = 'redis://redis:6379/1'
+def test_config(rabbit_config):
+    with config.patch(
+        {REDIS_URI_KEY: 'redis://localhost:6379/11'}
+    ):
+        yield
 
-    def redis_teardown():
-        client = StrictRedis.from_url(url)
-        client.delete(pytest.test_key)
-    request.addfinalizer(redis_teardown)
-    return url
+
+@pytest.yield_fixture
+def redis_client(test_config):
+    client = redis.StrictRedis.from_url(config.get(REDIS_URI_KEY))
+    yield client
+    client.flushdb()
+
+
+@pytest.fixture
+def create_param(redis_client):
+    def create(key, value):
+        redis_client.mset({key: value})
+        return value
+    return create
+
+
+@pytest.fixture
+def params(create_param):
+    return [
+        create_param(
+            key='foo_1',
+            value='bar_1',
+        ),
+        create_param(
+            key='foo_2',
+            value='bar_2',
+        ),
+        create_param(
+            key='foo_3',
+            value='bar_3',
+        ),
+    ]
