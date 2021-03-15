@@ -14,9 +14,12 @@ coverage-report:
 	coverage report -m
 
 test:
-	flake8 --ignore=ANN101,ANN201 listener logger statistics
+	flake8 --ignore=ANN101,ANN201,ANN001,ANN204 listener logger statistics
 	coverage run -m pytest listener/test $(ARGS)
 	coverage run --append -m pytest logger/test $(ARGS)
 	coverage run --append -m pytest statistics/test $(ARGS)
 
 coverage: test coverage-report coverage-html
+
+log:
+	docker exec twitter-stream-logger cat log.json

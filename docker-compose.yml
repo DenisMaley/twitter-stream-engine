@@ -10,8 +10,16 @@ services:
   redis:
     container_name: twitter-stream-redis
     image: redis
-    command: ["redis-server", "--appendonly", "yes"]
-    hostname: redis
+    ports:
+      - "6380:6379"
+    command: [
+      "bash", "-c",
+      '
+         docker-entrypoint.sh
+         --requirepass password
+        '
+    ]
+    restart: always
 
   listener:
     container_name: twitter-stream-listener
@@ -24,6 +32,10 @@ services:
     links:
         - "rabbit:twitter-stream-rabbitmq"
     environment:
+        CONSUMER_KEY: 'VAXeIbbL824ekd9Gx5e3Gw2e8'
+        CONSUMER_SECRET: 'Ft2xJ9nrmjkthvsDVxr5Uq0LiJVkABbrPZj3FqhS5OVexIt3Ah'
+        ACCESS_TOKEN: '1356346947708346368-EVeMjQsC7nnDfNVrfOp5hcUQ94Em8C'
+        ACCESS_TOKEN_SECRET: 'y94fjQoyXytokao9e8bZsfo0kQJJV1hVENu134pDnPEPS'
         RABBIT_PASSWORD: "guest"
         RABBIT_USER: "guest"
         RABBIT_HOST: "rabbit"
@@ -62,8 +74,27 @@ services:
     environment:
         REDIS_HOST: "redis"
         REDIS_PORT: "6379"
+        REDIS_INDEX: "11"
+        REDIS_PASSWORD: "password"
         RABBIT_PASSWORD: "guest"
         RABBIT_USER: "guest"
         RABBIT_HOST: "rabbit"
         RABBIT_PORT: "5672"
         RABBIT_MANAGEMENT_PORT: "15672"
+
+  gateway:
+    container_name: twitter-stream-gateway
+    build:
+      context: gateway
+    depends_on:
+      - rabbit
+    ports:
+      - "8004:8000"
+    links:
+      - "rabbit:twitter-stream-rabbitmq"
+    environment:
+      RABBIT_PASSWORD: "guest"
+      RABBIT_USER: "guest"
+      RABBIT_HOST: "rabbit"
+      RABBIT_PORT: "5672"
+      RABBIT_MANAGEMENT_PORT: "15672"
