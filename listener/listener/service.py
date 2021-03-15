@@ -66,7 +66,9 @@ class ListenerService(StreamListener):
         )
         stream = Stream(auth, self)
 
-        stream.filter(track=track)
+        stream.filter(track=track, is_async=True)
+
+        return True
 
     @rpc
     def log_trigger(self):

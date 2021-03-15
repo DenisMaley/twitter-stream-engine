@@ -16,11 +16,16 @@ class StatisticsService:
 
     @rpc
     def get_statistics(self):
-        amount = int(float(self.storage.get('amount')))
-        elapsed_time = int(float(self.storage.get('elapsed_time')))
+        amount = int(float(self.storage.get('amount') or 0))
+        elapsed_time = int(float(self.storage.get('elapsed_time') or 0))
+
+        try:
+            speed = amount / elapsed_time
+        except ZeroDivisionError:
+            speed = 0
 
         return {
             'amount': amount,
             'elapsed_time': elapsed_time,
-            'speed': amount / elapsed_time
+            'speed': speed
         }
