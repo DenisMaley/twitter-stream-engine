@@ -48,9 +48,27 @@ number of workers running at the same time.
 
 * [Docker][docker]
 * [Docker-compose][docker-compose]
+* Twitter account/Twitter app
 
+### Twitter account/Twitter app
+
+* Go to the [website][twitter_development] and create an account. 
+* Once you have verified your email you can log into your account. 
+You should be able to create a new app on the [apps page][twitter_apps_page].
+* Fill in all the details about your app and then create your access token.
+Make a note of your consumer key, consumer secret, OAuth access token and OAuth access token secret. 
+These are needed to connect to the API.
 
 ### Running
+
+Set twiter API credentials
+
+```shell script
+$ export TWITTER_CONSUMER_KEY='<TWITTER_CONSUMER_KEY>'
+$ export TWITTER_CONSUMER_SECRET='<TWITTER_CONSUMER_SECRET>' 
+$ export TWITTER_ACCESS_TOKEN='<TWITTER_ACCESS_TOKEN>'
+$ export TWITTER_ACCESS_TOKEN_SECRET='<TWITTER_ACCESS_TOKEN_SECRET>'
+```
 
 ```shell script
 $ docker-compose up
@@ -151,3 +169,5 @@ Use exit() or Ctrl-D (i.e. EOF) to exit.
 [eventlet]: http://eventlet.net/
 [docker]: https://docs.docker.com/get-docker/
 [docker-compose]: https://docs.docker.com/compose/install/
+[twitter_development]: https://developer.twitter.com/
+[twitter_apps_page]: https://developer.twitter.com/en/apps
