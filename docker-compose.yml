@@ -81,3 +81,20 @@ services:
         RABBIT_HOST: "rabbit"
         RABBIT_PORT: "5672"
         RABBIT_MANAGEMENT_PORT: "15672"
+
+  gateway:
+    container_name: twitter-stream-gateway
+    build:
+      context: gateway
+    depends_on:
+      - rabbit
+    ports:
+      - "8004:8000"
+    links:
+      - "rabbit:twitter-stream-rabbitmq"
+    environment:
+      RABBIT_PASSWORD: "guest"
+      RABBIT_USER: "guest"
+      RABBIT_HOST: "rabbit"
+      RABBIT_PORT: "5672"
+      RABBIT_MANAGEMENT_PORT: "15672"
