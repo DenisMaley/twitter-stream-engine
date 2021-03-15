@@ -1,0 +1,69 @@
+version: "2"
+services:
+  rabbit:
+    container_name: twitter-stream-rabbitmq
+    image: rabbitmq:3.7-management
+    ports:
+        - "15673:15672"
+    restart: always
+
+  redis:
+    container_name: twitter-stream-redis
+    image: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
+
+  listener:
+    container_name: twitter-stream-listener
+    build:
+      context: listener
+    depends_on:
+      - rabbit
+    ports:
+        - "8001:8000"
+    links:
+        - "rabbit:twitter-stream-rabbitmq"
+    environment:
+        RABBIT_PASSWORD: "guest"
+        RABBIT_USER: "guest"
+        RABBIT_HOST: "rabbit"
+        RABBIT_PORT: "5672"
+        RABBIT_MANAGEMENT_PORT: "15672"
+
+  logger:
+    container_name: twitter-stream-logger
+    build:
+      context: logger
+    depends_on:
+      - rabbit
+    ports:
+        - "8002:8000"
+    links:
+        - "rabbit:twitter-stream-rabbitmq"
+    environment:
+        RABBIT_PASSWORD: "guest"
+        RABBIT_USER: "guest"
+        RABBIT_HOST: "rabbit"
+        RABBIT_PORT: "5672"
+        RABBIT_MANAGEMENT_PORT: "15672"
+
+  statistics:
+    container_name: twitter-stream-statistics
+    build:
+      context: statistics
+    depends_on:
+      - rabbit
+      - redis
+    ports:
+        - "8003:8000"
+    links:
+        - "rabbit:twitter-stream-rabbitmq"
+        - "redis:twitter-stream-redis"
+    environment:
+        REDIS_HOST: "redis"
+        REDIS_PORT: "6379"
+        RABBIT_PASSWORD: "guest"
+        RABBIT_USER: "guest"
+        RABBIT_HOST: "rabbit"
+        RABBIT_PORT: "5672"
+        RABBIT_MANAGEMENT_PORT: "15672"

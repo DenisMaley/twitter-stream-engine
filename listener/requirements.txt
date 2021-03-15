@@ -1,0 +1,7 @@
+nameko==v3.0.0-rc6
+tweepy==3.10.0
+resettabletimer==0.7.0
+pytest==4.5.0
+coverage==4.5.3
+flake8==3.7.7
+flake8-annotations==2.5.0
