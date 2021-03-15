@@ -66,7 +66,7 @@ if you don't want to see logs.
 Then after it's up you can use the launch endpoint to launch streaming:
 
 ```shell script
-$ curl -i -d '{"track": ["bieber"]}' localhost:8004/launch
+$ curl -i -d '{"track": ["einstein"]}' localhost:8004/launch
 ```
 ```
 HTTP/1.1 200 OK
