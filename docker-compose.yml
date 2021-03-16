@@ -21,6 +21,17 @@ services:
     ]
     restart: always
 
+  postgres:
+    container_name: twitter-stream-postgres
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: "twitter_stream_db"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "postgres"
+    restart: always
+
   listener:
     container_name: twitter-stream-listener
     build:
@@ -48,11 +59,17 @@ services:
       context: logger
     depends_on:
       - rabbit
+      - postgres
     ports:
         - "8002:8000"
     links:
         - "rabbit:twitter-stream-rabbitmq"
+        - "postgres:twitter-stream-postgres"
     environment:
+        DB_PASSWORD: "password"
+        DB_USER: "postgres"
+        DB_HOST: "postgres"
+        DB_NAME: "twitter_stream_db"
         RABBIT_PASSWORD: "guest"
         RABBIT_USER: "guest"
         RABBIT_HOST: "rabbit"
